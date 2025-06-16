@@ -8,8 +8,10 @@ use garaga::ec_ops::{G1Point, G1PointTrait, u384};
 use starknet::SyscallResultTrait;
 use starknet::secp256_trait::{Secp256PointTrait, Secp256Trait};
 use starknet::secp256k1::Secp256k1Point;
+use utils::double_sha256::double_sha256_word_array;
 use utils::hash::{Digest, DigestTrait};
 use utils::word_array::{WordArray, WordArrayTrait};
+
 
 #[derive(Copy, Drop, Debug, PartialEq, Serde, Hash)]
 pub struct Secp256Signature {
@@ -71,7 +73,6 @@ fn is_bitcoin_signature_valid(
     let (Rx, _Ry) = R.get_coordinates().unwrap_syscall();
     Rx == signature.r
 }
-
 pub fn hex_char_to_nibble(hex_char: u8) -> u8 {
     if hex_char >= 48 && hex_char <= 57 {
         // 0-9
@@ -105,28 +106,19 @@ pub fn words_from_hex(hex_string: ByteArray) -> WordArray {
     words
 }
 
-fn u64_byte_reverse(word: u64) -> u64 {
-    (u128_byte_reverse(word.into()) / 0x10000000000000000).try_into().unwrap()
-}
-
-fn u32_byte_reverse(word: u32) -> u32 {
-    let word64: u64 = word.into();
-    let reversed64: u64 = u64_byte_reverse(word64);
-    let result64: u64 = reversed64 / 0x1_0000_0000; // shift down 32 bits
-    return result64.try_into().unwrap(); // convert back to u32
-}
-
+// calculating sha256(sha256(message))
+// raito double sha
+// implementation:https://github.com/keep-starknet-strange/raito/blob/baf4ca6fc45a9a50e421b20aa5d34de0a292096f/packages/utils/src/double_sha256.cairo#L8
+// cairo corelib sha256 implementation:
+// https://github.com/starkware-libs/cairo/blob/d5f083c3388c3c0c462dd3805cdd5531401a3783/corelib/src/sha256.cairo#L9
 fn calculate_bitcoin_hash(message: ByteArray) -> u256 {
-    let input1 = compute_sha256_byte_array(@message);
-    let mut array = ArrayTrait::new();
-    array.append_span(input1.span());
-    DigestTrait::new(compute_sha256_u32_array(array, 0, 0)).into()
+    let word_array = words_from_hex(message);
+    double_sha256_word_array(word_array).into()
 }
-
 
 /// @dev The only function needed to be called from the contract
 pub fn is_valid_bitcoin_signature(
-    message: u256, public_key: BitcoinPublicKey, signature: Secp256Signature,
+    message: ByteArray, public_key: BitcoinPublicKey, signature: Secp256Signature,
 ) -> bool {
-    is_bitcoin_signature_valid(message, public_key, signature)
+    is_bitcoin_signature_valid(calculate_bitcoin_hash(message), public_key, signature)
 }

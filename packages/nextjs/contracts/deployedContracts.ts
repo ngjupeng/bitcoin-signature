@@ -7,12 +7,30 @@ const deployedContracts = {
   devnet: {
     BitcoinSignature: {
       address:
-        "0x2345e4abece68cda53c5b05f01eb9bdc95af473c71b63be7433a7c4fdb0aa3d",
+        "0x4adcaefa99b164c6557167d341388e845ee37ea5bd6cd6fad5bbca4ab41f99e",
       abi: [
         {
           type: "impl",
           name: "BitcoinSignatureImpl",
           interface_name: "contracts::BitcoinSignature::IBitcoinSignature",
+        },
+        {
+          type: "struct",
+          name: "core::byte_array::ByteArray",
+          members: [
+            {
+              name: "data",
+              type: "core::array::Array::<core::bytes_31::bytes31>",
+            },
+            {
+              name: "pending_word",
+              type: "core::felt252",
+            },
+            {
+              name: "pending_word_len",
+              type: "core::integer::u32",
+            },
+          ],
         },
         {
           type: "struct",
@@ -71,24 +89,6 @@ const deployedContracts = {
           ],
         },
         {
-          type: "struct",
-          name: "core::byte_array::ByteArray",
-          members: [
-            {
-              name: "data",
-              type: "core::array::Array::<core::bytes_31::bytes31>",
-            },
-            {
-              name: "pending_word",
-              type: "core::felt252",
-            },
-            {
-              name: "pending_word_len",
-              type: "core::integer::u32",
-            },
-          ],
-        },
-        {
           type: "interface",
           name: "contracts::BitcoinSignature::IBitcoinSignature",
           items: [
@@ -98,7 +98,7 @@ const deployedContracts = {
               inputs: [
                 {
                   name: "message",
-                  type: "core::integer::u256",
+                  type: "core::byte_array::ByteArray",
                 },
                 {
                   name: "signature",
@@ -181,7 +181,7 @@ const deployedContracts = {
         },
       ],
       classHash:
-        "0x509249e7ed8e63f3dc3e1ffbe2d4dd1b505e05397a07009dda4195681e23325",
+        "0x4d163fe00b92b8db36bc3e3209d6a0fba9d54efc303719003ab4519d247317e",
     },
   },
   sepolia: {
@@ -193,6 +193,24 @@ const deployedContracts = {
           type: "impl",
           name: "BitcoinSignatureImpl",
           interface_name: "contracts::BitcoinSignature::IBitcoinSignature",
+        },
+        {
+          type: "struct",
+          name: "core::byte_array::ByteArray",
+          members: [
+            {
+              name: "data",
+              type: "core::array::Array::<core::bytes_31::bytes31>",
+            },
+            {
+              name: "pending_word",
+              type: "core::felt252",
+            },
+            {
+              name: "pending_word_len",
+              type: "core::integer::u32",
+            },
+          ],
         },
         {
           type: "struct",
@@ -251,24 +269,6 @@ const deployedContracts = {
           ],
         },
         {
-          type: "struct",
-          name: "core::byte_array::ByteArray",
-          members: [
-            {
-              name: "data",
-              type: "core::array::Array::<core::bytes_31::bytes31>",
-            },
-            {
-              name: "pending_word",
-              type: "core::felt252",
-            },
-            {
-              name: "pending_word_len",
-              type: "core::integer::u32",
-            },
-          ],
-        },
-        {
           type: "interface",
           name: "contracts::BitcoinSignature::IBitcoinSignature",
           items: [
@@ -278,7 +278,7 @@ const deployedContracts = {
               inputs: [
                 {
                   name: "message",
-                  type: "core::integer::u256",
+                  type: "core::byte_array::ByteArray",
                 },
                 {
                   name: "signature",
