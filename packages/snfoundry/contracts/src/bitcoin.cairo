@@ -118,7 +118,7 @@ fn calculate_bitcoin_hash(message: ByteArray) -> u256 {
 
 /// @dev The only function needed to be called from the contract
 pub fn is_valid_bitcoin_signature(
-    message: ByteArray, public_key: BitcoinPublicKey, signature: Secp256Signature,
+    message: u256, public_key: BitcoinPublicKey, signature: Secp256Signature,
 ) -> bool {
-    is_bitcoin_signature_valid(calculate_bitcoin_hash(message), public_key, signature)
+    is_bitcoin_signature_valid(message, public_key, signature)
 }

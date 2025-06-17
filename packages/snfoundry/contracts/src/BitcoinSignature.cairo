@@ -5,7 +5,7 @@ use contracts::bitcoin::{BitcoinPublicKey, Secp256Signature, is_valid_bitcoin_si
 pub trait IBitcoinSignature<TContractState> {
     fn verify_message(
         self: @TContractState,
-        message: ByteArray,
+        message: u256,
         signature: Secp256Signature,
         public_key: BitcoinPublicKey,
     ) -> bool;
@@ -44,7 +44,7 @@ pub mod BitcoinSignature {
     impl BitcoinSignatureImpl of IBitcoinSignature<ContractState> {
         fn verify_message(
             self: @ContractState,
-            message: ByteArray,
+            message: u256,
             signature: Secp256Signature,
             public_key: BitcoinPublicKey,
         ) -> bool {
